@@ -1,4 +1,4 @@
-use cgmath::num_traits::Pow;
+use cgmath::{num_traits::Pow, MetricSpace, Zero};
 
 pub struct Particle {
     position: cgmath::Point2<f64>,
@@ -19,9 +19,9 @@ unsafe impl bytemuck::Pod for RawParticle {}
 unsafe impl bytemuck::Zeroable for RawParticle {}
 
 fn lennard_jones_force(d: f64) -> f64 {
-    const EPSILON: f64 = 100.0;
-    const TURBO: f64 = 3.0;
-    (24.0 * EPSILON / d * d) * ((2.0 * TURBO / d).pow(12.0) - (TURBO / d).pow(6))
+    const EPSILON: f64 = 10000.0;
+    const TURBO: f64 = 0.345;
+    -(24.0 * EPSILON / d * d) * ((2.0 * TURBO / d).pow(12.0) - (TURBO / d).pow(6))
 }
 
 impl Particle {
@@ -44,6 +44,18 @@ impl Particle {
         forces.resize(particles.len(), cgmath::vec2(0.0, 0.0));
 
         //PUT EKSEMPEL HER
+
+        for (particle, force) in particles.iter().zip(forces.iter_mut()) {
+            for other_particle in particles.iter() {
+                if particle.position == other_particle.position {
+                    continue;
+                }
+                let mut direction = other_particle.position - particle.position;
+                let distance = direction.distance(Zero::zero());
+                direction /= distance;
+                *force += direction * lennard_jones_force(distance);
+            }
+        }
 
         //ENDE AF EKSEMPEL
 
