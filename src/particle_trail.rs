@@ -56,7 +56,7 @@ impl TrailManager {
         Self { trails: vec![] }
     }
 
-    pub fn update(&mut self, dt: std::time::Duration, particles: Vec<Particle>) {
+    pub fn update(&mut self, dt: std::time::Duration, particles: &Vec<Particle>) {
         for trail in &mut self.trails {
             trail.time_to_live = trail.time_to_live.saturating_sub(dt);
         }

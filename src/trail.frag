@@ -8,6 +8,7 @@ layout(location = 0) out vec4 out_color;
 
 void main() {
     float dist = abs(length(frag_pos) - 1);
-    float power = 1.0/exp(dist*3.0);
-    out_color = vec4(charge_color, power*time_to_live*time_to_live);
+    float power = exp(-dist*30.0);
+    float ttl = time_to_live / 3.0;
+    out_color = vec4(charge_color, 0.10 * power*ttl*ttl);
 }
