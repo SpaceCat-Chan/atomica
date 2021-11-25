@@ -45,18 +45,6 @@ impl Particle {
 
         //PUT EKSEMPEL HER
 
-        for (particle, force) in particles.iter().zip(forces.iter_mut()) {
-            for other_particle in particles.iter() {
-                if particle.position == other_particle.position {
-                    continue;
-                }
-                let mut direction = other_particle.position - particle.position;
-                let distance = direction.distance(Zero::zero());
-                direction /= distance;
-                *force += direction * lennard_jones_force(distance);
-            }
-        }
-
         //ENDE AF EKSEMPEL
 
         for (particle, force) in particles.iter_mut().zip(forces.iter()) {
